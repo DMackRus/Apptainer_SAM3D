@@ -1,0 +1,8 @@
+*~
+*.swp
+*.swo
+
+SAM3D_apptainer/
+
+home/*
+!home/.bashrc
