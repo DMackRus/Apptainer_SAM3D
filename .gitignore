@@ -5,4 +5,6 @@
 SAM3D_apptainer/
 
 home/*
+!home/my_scripts/
+home/my_scripts/__pycache__/
 !home/.bashrc
