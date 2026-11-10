@@ -128,19 +128,10 @@ def reconstruct(photo, mask, seed):
 
 # ---------------------------------------------------------------- 4. view
 def view(glb_path):
-    import open3d as o3d
-    import trimesh
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from view_mesh import show  # same viewer as ~/my_scripts/view_mesh.py
 
-    scene = trimesh.load(glb_path, force="scene")
-    tm = trimesh.util.concatenate(list(scene.dump()))
-    mesh = o3d.geometry.TriangleMesh(o3d.utility.Vector3dVector(tm.vertices),
-                                     o3d.utility.Vector3iVector(tm.faces))
-    colors = getattr(tm.visual, "vertex_colors", None)
-    if colors is not None and len(colors) == len(tm.vertices):
-        mesh.vertex_colors = o3d.utility.Vector3dVector(np.asarray(colors)[:, :3] / 255.0)
-    mesh.compute_vertex_normals()
-    print("Viewer: drag to rotate, scroll to zoom, q to close.")
-    o3d.visualization.draw_geometries([mesh], window_name=os.path.basename(os.path.dirname(glb_path)))
+    show(glb_path)
 
 
 def main():

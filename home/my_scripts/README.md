@@ -17,3 +17,34 @@ Options: `--fps 15` (if 30 fails on USB 2), `--image photo.png` (use a file inst
 
 Tips: one object, fully in view, not cut off by the image edge, decent lighting. SAM 3D guesses the
 hidden back side, so the side facing the camera comes out best. The model's size/scale is only roughly right.
+
+## live_view.py: live RealSense view
+```
+python ~/my_scripts/live_view.py            # add --depth for colour + depth, --fps 15 on USB 2
+```
+Runs until **Ctrl+C** in the terminal (q / Esc in the window also work).
+
+## view_mesh.py: interactive mesh viewer
+```
+python ~/my_scripts/view_mesh.py                               # newest ~/sam3d_outputs/*/object.glb
+python ~/my_scripts/view_mesh.py path/to/model.obj --wireframe  # any .obj/.glb/.ply/.stl
+```
+Drag = rotate, scroll = zoom, ctrl/shift + drag = pan, w = wireframe, r = reset view, q = close.
+`--axes` adds an XYZ frame. Textured .obj files are shown with per-vertex colours.
+
+## image_to_primitive.py: RealSense RGB-D photo -> cylinder or box primitive
+```
+python ~/my_scripts/image_to_primitive.py --name mug          # live view, SPACE takes the photo
+python ~/my_scripts/image_to_primitive.py --input ~/sam3d_outputs/mug   # re-run on a saved capture
+```
+One upright object on a table, plain background. A camera looking down at ~20-60 deg works best (top + sides visible).
+1. Finds the table plane in the depth, the object is the biggest blob above it (SAM 2 sharpens the mask).
+2. Cylinder or box? Box side normals point in 1-2 directions 90 deg apart, a cylinder's are spread out;
+   a box's top fills its bounding rectangle, a disk only ~79% of it. Printed as `squareness` (0 = cylinder, 1 = box).
+3. Fits height (from the table), radius or box size + orientation. Hidden sizes are assumed
+   (box seen face-on: square footprint, override with `--box-depth 0.05`).
+
+Saved in `~/sam3d_outputs/<name>/`: `primitive.json` (type, size in m, 4x4 camera->object pose),
+`primitive.obj` (centred, z up), `primitive_in_camera.obj`, `primitive_overlay.png`, `mask.png`,
+`object_points.ply`, plus the capture (`color.png`, `depth.png`, `camera.json`).
+Options: `--force cylinder|box`, `--no-sam`, `--no-view`, `--fps 15`, `--max-depth 2.0`.
