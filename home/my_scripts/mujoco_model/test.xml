@@ -1,0 +1,17 @@
+<mujoco model="Basic arm scene">
+    <include file="assets/basic_scene.xml"/>
+    <!-- <include file="assets/assets.xml"/> -->
+    <compiler meshdir="../objects"/>
+
+    <asset>
+        <mesh name="Tomato_can" file="tomato_can/mesh.obj"/>
+    </asset>
+
+    <worldbody>
+        <body pos="0.8 0.8 0.03" name="Tomato_can">
+            <joint type="free" />
+            <geom type = "mesh" mesh = "Tomato_can" rgba = "0 0.9 0.1 1" mass="0.518" friction = "1 0.005 0.001" condim="3" margin = "0.001" solimp="0.4 0.9 0.001 0.5 2" solref = "0.06 1.0"/>
+        </body>
+
+    </worldbody>
+</mujoco>
